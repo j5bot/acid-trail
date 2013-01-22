@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>acid-trail | Demo</title>
+	<style>
+		body { font-family: sans-serif; padding: 50px; font-size: 15px; }
+		label, textarea { display: block; }
+
+		.colors { min-height: 110px; margin-top: 20px; }
+		.colors div {
+		    display: inline-block;
+		    width: 100px;
+		    height: 100px;
+		    margin-right: 10px;
+		    margin-bottom: 10px;
+		}
+
+		#color-trail-names {
+			min-height: 120px;
+			list-style-type: none;
+			margin: 0px;
+			padding: 0px;
+		}
+
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="lib/cryptojs/rollups/sha1.js"></script>
+	<script src="acid-trail.js"></script>
+	<script src="lib/lorem.js"></script>
+</head>
+<body>
+
+	<h1>ACID Trail</h1>
+
+	<p>An ACID trail is a sequence of color swatches and color names used to represent a hashed representation of some object (or text) in a human addressable and recognizable way.</p>
+	<p>For a reasonable set of items, the sequence of color names should have low collision rates and the sequence of color swatches matches the collision rate of the hashing algorithm used.</p>
+
+	<div>
+	    <label>Enter Some Text</label>
+	    <textarea id="lipsum" rows="5" cols="50" data-lorem="2p"></textarea>
+	    <button id="color-me">Create Acid Trail</button> <button id="clear-lipsum">Clear</button>
+	</div>
+
+	<div class="colors"></div>
+	<div><ul id="color-trail-names"></ul></div>
+
+	<script>
+		$(document).ready(function () {
+
+			$("#clear-lipsum").click(function () {
+				$("#lipsum").val("");
+			});
+
+			$("#color-me").click(function () {
+				var trail = new Acid().trail($("#lipsum").val());
+				var colors = trail.colors();
+				$(".colors").empty();
+				for (var i = 0, l = trail.length; i < l; i++) {
+					var color = colors[i];
+					$(".colors").append($("<div></div>").css("background-color", color));
+				}
+
+				for (var i = 0, l = trail.length; i < l; i++) {
+					$("#color-trail-names").empty().append($("<li>" + trail.name(i + 1, " - ").toLowerCase() + "</li>")); // we're specifying the length of the name we want, so we use +1
+				}
+			}).trigger("click");
+		});
+	</script>
+
+</body>
