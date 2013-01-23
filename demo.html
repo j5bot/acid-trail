@@ -13,9 +13,17 @@
 		    height: 100px;
 		    margin-right: 10px;
 		    margin-bottom: 10px;
+		    text-align: center;
+		}
+		.colors div span {
+			margin-top: 50%;
+			display: inline-block;
+			vertical-align: middle;
+			color: white;
+			font-size: 11px;
 		}
 
-		#color-trail-names {
+		#color-trail-names, #color-trail-colors {
 			min-height: 120px;
 			list-style-type: none;
 			margin: 0px;
@@ -32,7 +40,7 @@
 
 	<h1>ACID Trail</h1>
 
-	<p>An ACID trail is a sequence of color swatches and color names used to represent a hashed representation of some object (or text) in a human addressable and recognizable way.</p>
+	<p>An ACID trail is a sequence of color swatches and color names used to represent the hashed signature of some object (or text) in a human addressable and recognizable way.</p>
 	<p>For a reasonable set of items, the sequence of color names should have low collision rates and the sequence of color swatches matches the collision rate of the hashing algorithm used.</p>
 
 	<div>
@@ -41,8 +49,16 @@
 	    <button id="color-me">Create Acid Trail</button> <button id="clear-lipsum">Clear</button>
 	</div>
 
-	<div class="colors"></div>
+	<h5>Exact Color Swatches</h5>
+	<div class="colors" id="colors"></div>
+	<h5>Closest Named Color Swatches</h5>
+	<div class="colors" id="matchColors"></div>
+
+	<h5>Potential ACID Names</h5>
 	<div><ul id="color-trail-names"></ul></div>
+
+	<h5>Closest Colors Hex Values</h5>
+	<div><ul id="color-trail-colors"></ul></div>
 
 	<script>
 		$(document).ready(function () {
@@ -54,15 +70,22 @@
 			$("#color-me").click(function () {
 				var trail = new Acid().trail($("#lipsum").val());
 				var colors = trail.colors();
-				$(".colors").empty();
+				var matchColors = trail.matchcolors();
+
+				$("#colors,#matchColors,#color-trail-names,#color-trail-colors").empty();
+
 				for (var i = 0, l = trail.length; i < l; i++) {
-					var color = colors[i];
-					$(".colors").append($("<div></div>").css("background-color", color));
+					$("#colors").append($("<div><span>" + colors[i] + "</span></div>").css("background-color", colors[i]));
+					$("#matchColors").append($("<div><span>" + matchColors[i] + "</span></div>").css("background-color", matchColors[i]))
 				}
 
 				for (var i = 0, l = trail.length; i < l; i++) {
-					$("#color-trail-names").empty().append($("<li>" + trail.name(i + 1, " - ").toLowerCase() + "</li>")); // we're specifying the length of the name we want, so we use +1
+					$("#color-trail-names").append($("<li>" + trail.name(i + 1, " - ").toLowerCase() + "</li>")); // we're specifying the length of the name we want, so we use +1
 				}
+				$("#color-trail-colors").append($("<li>" + trail.colorString() + "</li>"));
+
+
+
 			}).trigger("click");
 		});
 	</script>

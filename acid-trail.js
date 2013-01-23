@@ -60,7 +60,7 @@ var Acid = (function () {
     colors: function (length, func) {
       if (!this._colorSet) {
         this._colorSet = this._colors.map(function (v,i,a) {
-          return v.hex;
+          return v.hex.toLowerCase();
         });
       }
       if (func) {
@@ -68,6 +68,17 @@ var Acid = (function () {
       } else {
         return this._colorSet.slice(0,length || this._colors.length);
       }
+    },
+    matchcolors: function (length) {
+      if (!this._matchColors) {
+        this._matchColors = this._colors.map(function (v,i,a) {
+          return v.match.color.toLowerCase();
+        });
+      }
+      return this._matchColors.slice(0, length || this._matchColors.length);
+    },
+    colorString: function (length, separator) {
+      return this.matchcolors(length).join(separator || " ");
     },
     name: function (length, separator) {
       if (!this.names) {
