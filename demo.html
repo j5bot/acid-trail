@@ -63,6 +63,13 @@
 	<script>
 		$(document).ready(function () {
 
+			if (window.location.hash) {
+				$("#lipsum").val(window.location.hash.substr(1));
+			}
+			if (window.location.search) {
+				$("#lipsum").val(window.location.search.split("=",2)[1]);
+			}
+
 			$("#clear-lipsum").click(function () {
 				$("#lipsum").val("");
 			});
